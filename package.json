@@ -1,0 +1,28 @@
+{
+  "name": "rest-starter",
+  "version": "1.0.0",
+  "description": "This is a boilerplate code for a simple rest module.\r This consists of:\r 1. Simple server app\r 2. Routing using Express, to GET, PUT, POST, DELETE of /item\r 3. Access to a MYSQL database",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MeCode4Food/node-rest-starter.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MeCode4Food/node-rest-starter/issues"
+  },
+  "homepage": "https://github.com/MeCode4Food/node-rest-starter#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "http": "0.0.0",
+    "morgan": "^1.9.0",
+    "mysql": "^2.16.0"
+  }
+}
