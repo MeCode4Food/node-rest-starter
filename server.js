@@ -1,10 +1,10 @@
-import express from "express";
-import http from "http";
-import morgan from "morgan";
-import bodyParser from "body-parser";
-import cors from "cors";
-import config from "./config/config.json";
-import initialiseDb from "./db/db";
+const express = require("express");
+const http = require("http");
+const morgan = require("morgan");
+const bodyParser = require("body-parse");
+const cors = require("cors");
+const config = require("./config/config.json");
+const initialiseDb = require("./db/db");
 
 let app = express();
 app.server = http.createServer(app);
@@ -21,7 +21,7 @@ app.use(bodyParser.json({
     limit: config.bodyLimit
 }));
 
-initialiseDb( db => {
+initialiseDb(function(db){
 
     // internal middleware
     app.use(middleware({ config, db }));
@@ -34,4 +34,4 @@ initialiseDb( db => {
     })
 });
 
-export default app;
+module.exports = app;
