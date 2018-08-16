@@ -1,8 +1,0 @@
-{
-	"host": "127.0.0.1",
-	"user": "chick",
-	"password": "chick",
-	"port": 8080,
-	"bodyLimit": "100kb",
-	"corsHeaders": ["Link"]
-}

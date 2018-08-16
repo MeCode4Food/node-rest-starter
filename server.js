@@ -1,13 +1,27 @@
 const express = require("express");
 const http = require("http");
 const morgan = require("morgan");
-const bodyParser = require("body-parse");
+const bodyParser = require("body-parser");
 const cors = require("cors");
-const config = require("./config/config.json");
-const initialiseDb = require("./db/db");
+const config = require("./config/config");
+const connection = require('express-myconnection');
+const mysql = require("mysql");
+const routes = require('./routes/routes');
+const Docs = require('express-api-doc');
 
 let app = express();
 app.server = http.createServer(app);
+
+// express api documentation
+const dock = new Docs(app);
+dock.track({
+    path: './docs/examples.txt' // responses and requests will save here
+})
+
+dock.generate({
+    path: './docs/template.html',
+    examples: './docs/examples.txt'
+});
 
 // logger
 app.use(morgan('dev'));
@@ -21,17 +35,12 @@ app.use(bodyParser.json({
     limit: config.bodyLimit
 }));
 
-initialiseDb(function(db){
+app.use(connection(mysql, config.database));
 
-    // internal middleware
-    app.use(middleware({ config, db }));
+app.use('*', routes)
 
-    // api router
-    app.unsubscribe('/api', api ({ config, db}));
-
-    app.server.listen(process.env.PORT || config.port, () => {
-        console.log(`Started on port ${app.server.address().port}`);
-    })
-});
+app.server.listen(process.env.PORT || config.port, () => {
+    console.log(`Started on port ${app.server.address().port}`);
+})
 
 module.exports = app;
