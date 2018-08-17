@@ -37,6 +37,7 @@ router.get('/:id', (req, res) => {
     });
 });
 
+// GET all journals
 router.get('/', (req, res) => {
 
     let queryString = "";
@@ -179,8 +180,6 @@ router.put('/:id', (req, res) => {
         else res.status(200).json(result);
     });
 });
-
-// todo : PUT
 
 router.delete('/:id', function(req, res){
     let id = req.params.id;
