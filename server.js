@@ -6,22 +6,10 @@ const cors = require("cors");
 const config = require("./config/config");
 const connection = require('express-myconnection');
 const mysql = require("mysql");
-const routes = require('./routes/routes');
-const Docs = require('express-api-doc');
+const routes = require('./routes/routes.js');
 
 let app = express();
 app.server = http.createServer(app);
-
-// express api documentation
-const dock = new Docs(app);
-dock.track({
-    path: './docs/examples.txt' // responses and requests will save here
-})
-
-dock.generate({
-    path: './docs/template.html',
-    examples: './docs/examples.txt'
-});
 
 // logger
 app.use(morgan('dev'));
@@ -37,7 +25,11 @@ app.use(bodyParser.json({
 
 app.use(connection(mysql, config.database));
 
-app.use('*', routes)
+app.all('*', function(req, res, next){
+    console.log("hi");
+    next();
+})
+app.use('/', routes);
 
 app.server.listen(process.env.PORT || config.port, () => {
     console.log(`Started on port ${app.server.address().port}`);
