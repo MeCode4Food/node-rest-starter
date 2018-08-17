@@ -138,7 +138,49 @@ router.post('/', (req, res) => {
     });
 });
 
-// todo : DELETE
+router.put('/:id', (req, res) => {
+    let queryArgs = [];
+
+    if(req.params.id === undfined){
+        res.status(400).json(_response.error_bad_request);
+        req.body.data.id = req.params.id;
+        return
+    }
+    
+    let journalSingle = new Journal(req.body.data);
+
+    queryArgs.push(journalSingle.content)
+        .push(journalSingle.date)
+        .push(journalSingle.title)
+        .push(journalSingle.id);
+    
+    async.waterfall([
+        function queryDatabase(callback){
+            req.getConnection( function(err, conn){
+                if(err) callback(_response.err, null);
+        
+                conn.query("UPDATE journal set content = ? , date = ?, title = ? WHERE id = ?", queryArgs, function(err, rows){
+                    if(err) callback(err, null); 
+                    else{
+                        if(rows.length < 1){
+                            callback(null, _response.success_journal_not_found);
+                        }
+                        else{
+                            let response =  _response.success;
+                            response.message = rows; 
+                            callback(null, response);
+                        }
+                    }
+                });
+            })
+        }
+    ],  function handleErrors(err, result){
+        if(err) res.status(400).json(err);
+        else res.status(200).json(result);
+    });
+});
+
+// todo : PUT
 
 router.delete('/:id', function(req, res){
     let id = req.params.id;
