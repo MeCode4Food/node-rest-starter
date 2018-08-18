@@ -1,5 +1,5 @@
-const Docs = require('express-api-doc');
-const app = require('../server');
+const Docs = require("express-api-doc");
+const app = require("../server");
 
 // express api documentation
 const dock = new Docs(app);

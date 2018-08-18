@@ -1,13 +1,13 @@
-const routes = require('express').Router();
-const apiRoutes = require('express').Router();
+const router = require('express').Router();
+const apiRouter = require('express').Router();
 const journal = require('./journalRoute');
 
+router.get('/info', function(req, res){
+    res.status(200).json({ status:"OK", message: "chick's express API"});
+});
 
-routes.use('/api', apiRoutes);
-apiRoutes.use('/', (req, res)=>{
-    res.status(200).json({ status: "OK"});
-})
+router.use('/api', apiRouter);
 
-apiRoutes.use('/journal', journal);
+apiRouter.use('/journal', journal);
 
-module.exports = routes;
+module.exports = router;

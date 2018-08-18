@@ -6,7 +6,7 @@ const cors = require("cors");
 const config = require("./config/config");
 const connection = require('express-myconnection');
 const mysql = require("mysql");
-const routes = require('./routes/routes');
+const routes = require('./routes/routes.js');
 
 let app = express();
 app.server = http.createServer(app);
@@ -25,7 +25,11 @@ app.use(bodyParser.json({
 
 app.use(connection(mysql, config.database));
 
-app.use('*', routes);
+app.all('*', function(req, res, next){
+    console.log("hi");
+    next();
+})
+app.use('/', routes);
 
 app.server.listen(process.env.PORT || config.port, () => {
     console.log(`Started on port ${app.server.address().port}`);
