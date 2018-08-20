@@ -4,11 +4,13 @@ const User = require("../models/user");
 const async = require("async");
 
 router.get('/:id', (req, res) => {
+    let id;
+    id = parseInt(req.params.id, 10); 
 
-    let queryArgs = [];
-
-    if(req.params.id !== undefined){
-        queryArgs.push[req.param.id];
+    
+    if(isNaN(id)){
+        res.status(400).json(_response.error_bad_request);
+        return
     }
 
     async.waterfall([
@@ -16,11 +18,14 @@ router.get('/:id', (req, res) => {
             req.getConnection( function(err, conn){
                 if(err) callback(_response.err, null);
         
-                conn.query("SELECT * FROM users WHERE id = ?", queryArgs, function(err, rows){
+                conn.query("SELECT * FROM users WHERE id = " + req.params.id, [], function(err, rows){
                     if(err) callback(err, null); 
                     else{
                         if(rows.length < 1){
-                            callback(null, _response.success_user_not_found);
+                            let response =  _response.success;
+                            response.message = rows;    
+                            callback(null, response);
+                            // callback(null, _response.success_user_not_found);
                         }
                         else{
                             let response =  _response.success;
@@ -37,11 +42,20 @@ router.get('/:id', (req, res) => {
     });
 });
 
-// GET all users
-router.get('/', (req, res) => {
+// GET all users or query by email
+router.get('', (req, res) => {
+    let queryString;
+    let queryArgs;
 
-    let queryString = "";
-    let queryArgs = [];
+    
+    if(req.query.email !== undefined){
+        queryString = "WHERE email = ?";
+        queryArgs = req.query.email;
+    }
+    else if(Object.keys(req.query) === 0){
+        queryString = "";
+        queryArgs = [];
+    }
 
     async.waterfall([
         function queryDatabase(callback){
@@ -69,11 +83,11 @@ router.get('/', (req, res) => {
     });
 });
 
-router.post('/', (req, res) => {
+router.post('', (req, res) => {
     let userArray = [];
     let userSingle;
     let isMultiInput = false;
-    let queryString;
+    let queryString ="";
     let queryArgs = [];
     
     if(req.body.data === undefined){
@@ -110,7 +124,7 @@ router.post('/', (req, res) => {
         queryString += "( ?, ?, ? )";
         queryArgs.push(userSingle.name);
         queryArgs.push(userSingle.email);
-        queryArgs.push(0); // no points
+        queryArgs.push(userSingle.points); // no points
     }
 
     async.waterfall([
@@ -118,7 +132,7 @@ router.post('/', (req, res) => {
             req.getConnection( function(err, conn){
                 if(err) callback(_response.err, null);
         
-                conn.query("INSERT INTO users(name, email, points) VALUES" + queryString, queryArgs, function(err, rows){
+                conn.query("INSERT INTO users(name, email, points) VALUES " + queryString, queryArgs, function(err, rows){
                     if(err) callback(err, null); 
                     else{
                         if(rows.length < 1){

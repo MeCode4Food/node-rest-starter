@@ -7,7 +7,7 @@ class User{
         this.id = object.id? object.id : null;
         this.name = object.name;
         this.email = object.email;
-        this.points = object.points;
+        this.points = object.points ? object.points: 0;
     }
 }
 

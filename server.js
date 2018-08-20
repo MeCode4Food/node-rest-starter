@@ -26,7 +26,6 @@ app.use(bodyParser.json({
 app.use(connection(mysql, config.database));
 
 app.all('*', function(req, res, next){
-    console.log("hi");
     next();
 })
 app.use('/', routes);
