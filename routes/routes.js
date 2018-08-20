@@ -9,5 +9,6 @@ router.get('/info', function(req, res){
 router.use('/api', apiRouter);
 
 apiRouter.use('/journal', journal);
+apiRouter.use('/user', user);
 
 module.exports = router;
